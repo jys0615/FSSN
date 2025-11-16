@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package unary;
+
+option java_multiple_files = true;
+option java_package = "com.example.unary";
+option java_outer_classname = "HelloUnaryProto";
+
+message NumberRequest {
+  int32 number = 1;
+}
+
+message NumberResponse {
+  int32 result = 1;
+}
+
+service UnaryService {
+  rpc GetSquare (NumberRequest) returns (NumberResponse);
+}

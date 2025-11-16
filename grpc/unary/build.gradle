@@ -18,7 +18,7 @@ dependencies {
     implementation "io.grpc:grpc-protobuf:${grpcVersion}"
     implementation "io.grpc:grpc-stub:${grpcVersion}"
     implementation "com.google.protobuf:protobuf-java:${protobufVersion}"
-
+    implementation 'javax.annotation:javax.annotation-api:1.3.2'
     testImplementation 'junit:junit:4.13.2'
 }
 
@@ -51,4 +51,26 @@ sourceSets {
             srcDirs 'src/main/proto'
         }
     }
+}
+
+tasks.register('runServer', JavaExec) {
+    mainClass = 'com.example.unary.UnaryServer'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+tasks.register('runClient', JavaExec) {
+    mainClass = 'com.example.unary.UnaryClient'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+sourceSets {
+    main {
+        resources {
+            exclude '**/*.proto'
+        }
+    }
+}
+
+tasks.named('processResources') {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }

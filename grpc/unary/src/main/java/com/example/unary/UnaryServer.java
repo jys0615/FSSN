@@ -1,4 +1,4 @@
-package main.java.com.example.unary;
+package com.example.unary;
 
 public class UnaryServer {
     
