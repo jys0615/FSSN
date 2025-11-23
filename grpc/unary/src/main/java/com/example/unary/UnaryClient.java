@@ -1,47 +1,36 @@
 package com.example.unary;
 
-import io.grpc.Server;
-import io.grpc.ServerBuilder;
-import io.grpc.stub.StreamObserver;
-
-import java.io.IOException;
-import com.example.unary.NumberRequest;
-import com.example.unary.NumberResponse;
-import com.example.unary.UnaryServiceGrpc;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
 
 public class UnaryClient {
 
-    // 1) 서비스를 구현한 클래스
-    static class UnaryServiceImpl extends UnaryServiceGrpc.UnaryServiceImplBase {
-        @Override
-        public void getSquare(NumberRequest request, StreamObserver<NumberResponse> responseObserver) {
+    public static void main(String[] args) {
+        System.out.println("Unary gRPC Client running...");
 
-            int num = request.getNumber();
-            int squared = num * num;
+        // gRPC 채널 생성
+        ManagedChannel channel = ManagedChannelBuilder
+                .forAddress("localhost", 50051)
+                .usePlaintext()
+                .build();
 
-            System.out.println("[Server] Received number: " + num);
-            System.out.println("[Server] Calculated square: " + squared);
+        // Stub 생성
+        UnaryServiceGrpc.UnaryServiceBlockingStub stub =
+                UnaryServiceGrpc.newBlockingStub(channel);
 
-            NumberResponse response = NumberResponse.newBuilder()
-                    .setResult(squared)
-                    .build();
+        // 요청 생성
+        NumberRequest request = NumberRequest.newBuilder()
+                .setNumber(12)
+                .build();
 
-            // 응답 전송
-            responseObserver.onNext(response);
-            responseObserver.onCompleted();
-        }
-    }
+        System.out.println("[Client] Sending number: 12");
 
-    public static void main(String[] args) throws IOException, InterruptedException {
-        System.out.println("Unary gRPC Server starting...");
+        // 서버 호출
+        NumberResponse response = stub.getSquare(request);
 
-        Server server = ServerBuilder
-                .forPort(50051)
-                .addService(new UnaryServiceImpl())
-                .build()
-                .start();
+        System.out.println("[Client] Response from server: " + response.getResult());
 
-        System.out.println("Server started on port 50051");
-        server.awaitTermination();
+        // 채널 종료
+        channel.shutdown();
     }
 }
