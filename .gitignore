@@ -1,0 +1,84 @@
+# -----------------------------
+# Java / Gradle / gRPC Project
+# -----------------------------
+
+# Compiled class files
+*.class
+
+# Log files
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+
+# -----------------------------
+# OS / IDE related
+# -----------------------------
+
+# macOS Finder
+.DS_Store
+
+# VS Code
+.vscode/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+
+# -----------------------------
+# Gradle
+# -----------------------------
+
+# Gradle build output
+/build/
+*/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Local Gradle cache
+.gradle/
+
+# If you have gradlew in submodules:
+*/.gradle/
+*/build/
+
+# Don't ignore Gradle wrapper scripts
+# (These must stay tracked for others to run the project)
+!gradlew
+!gradlew.bat
+!gradle/wrapper/**
+
+
+# -----------------------------
+# Protocol Buffers / gRPC
+# -----------------------------
+
+# gRPC auto-generated sources
+/build/generated/
+*/build/generated/
+
+
+# -----------------------------
+# Logs, temp files
+# -----------------------------
+*.tmp
+*.swp
+*.swo
+*.idea/**/workspace.xml
+*.idea/**/tasks.xml
