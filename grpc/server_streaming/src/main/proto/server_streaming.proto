@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package serverstream;
+
+option java_multiple_files = true;
+option java_package = "com.example.serverstreaming";
+option java_outer_classname = "ServerStreamingProto";
+
+// 클라이언트가 숫자 1개 보냄
+message NumberRequest {
+  int32 start = 1; // 시작 숫자
+}
+
+// 서버가 여러 개의 메시지를 스트림으로 반환
+message NumberResponse {
+  int32 value = 1;
+}
+
+service ServerStreamingService {
+  rpc StreamNumbers (NumberRequest) returns (stream NumberResponse);
+}
