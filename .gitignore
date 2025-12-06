@@ -1,90 +1,50 @@
-# -----------------------------
-# Java / Gradle / gRPC Project
-# -----------------------------
+# =======================================
+# Global Ignore for Java / Gradle Projects
+# =======================================
 
-# Compiled class files
-*.class
+# --- Build output anywhere in the project ---
+**/build/
+**/bin/
+**/out/
 
-# Log files
+# --- Gradle ---
+.gradle/
+**/.gradle/
+!gradle/wrapper/gradle-wrapper.jar
+
+# --- IntelliJ IDEA / VSCode / macOS ---
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.DS_Store
+
+# --- Logs / temp files ---
 *.log
+*.tmp
+*.swp
+*.swo
 
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files
+# --- Jar / package outputs ---
 *.jar
 *.war
-*.nar
 *.ear
 *.zip
 *.tar.gz
 *.rar
 
+# --- gRPC / Protobuf generated files ---
+**/generated/
+**/generated-sources/
+**/generatedTests/
 
-# -----------------------------
-# OS / IDE related
-# -----------------------------
+# --- Protobuf extracted files ---
+**/extracted-include-protos/
+**/extracted-protos/
 
-# macOS Finder
-.DS_Store
+# --- Scripts auto-created by Gradle ---
+**/scripts/
 
-# VS Code
-.vscode/
-
-# IntelliJ IDEA
-.idea/
-*.iml
-*.ipr
-*.iws
-out/
-
-
-# -----------------------------
-# Gradle
-# -----------------------------
-
-# Gradle build output
-/build/
-*/build/
-!gradle/wrapper/gradle-wrapper.jar
-
-# Local Gradle cache
-.gradle/
-
-# If you have gradlew in submodules:
-*/.gradle/
-*/build/
-
-# Don't ignore Gradle wrapper scripts
-# (These must stay tracked for others to run the project)
-!gradlew
-!gradlew.bat
-!gradle/wrapper/**
-
-
-# -----------------------------
-# Protocol Buffers / gRPC
-# -----------------------------
-
-# gRPC auto-generated sources
-/build/generated/
-*/build/generated/
-
-
-# Gradle/Java compiled output (bin directories)
-bin/
-*/bin/
-grpc/*/bin/
-
-
-# -----------------------------
-# Logs, temp files
-# -----------------------------
-*.tmp
-*.swp
-*.swo
-*.idea/**/workspace.xml
-*.idea/**/tasks.xml
+# --- Reports ---
+**/reports/
