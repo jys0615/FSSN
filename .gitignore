@@ -74,6 +74,12 @@ out/
 */build/generated/
 
 
+# Gradle/Java compiled output (bin directories)
+bin/
+*/bin/
+grpc/*/bin/
+
+
 # -----------------------------
 # Logs, temp files
 # -----------------------------
