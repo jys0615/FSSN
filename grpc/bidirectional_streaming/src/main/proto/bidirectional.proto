@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package bidistream;
+
+option java_multiple_files = true;
+option java_package = "com.example.bidirectional";
+option java_outer_classname = "BidirectionalProto";
+
+message ChatMessage {
+  string sender = 1;
+  string message = 2;
+}
+
+service BidirectionalChatService {
+  rpc Chat (stream ChatMessage) returns (stream ChatMessage);
+}
