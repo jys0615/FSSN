@@ -16,9 +16,7 @@ public class UnaryServer {
             int num = request.getNumber();
             int squared = num * num;
 
-            System.out.println("[Server] Received number: " + num);
-            System.out.println("[Server] Calculated square: " + squared);
-
+            // Python 서버처럼 처리 로그 없이 조용히 처리
             NumberResponse response = NumberResponse.newBuilder()
                     .setResult(squared)
                     .build();
@@ -30,15 +28,15 @@ public class UnaryServer {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        System.out.println("Unary gRPC Server starting...");
-
         Server server = ServerBuilder
                 .forPort(50051)
                 .addService(new UnaryServiceImpl())
                 .build()
                 .start();
 
-        System.out.println("Server started on port 50051");
+        // Python 스타일: "Starting server. Listening on port 50051."
+        System.out.println("Starting server. Listening on port 50051.");
+
         server.awaitTermination();
     }
 }
