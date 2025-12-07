@@ -6,40 +6,49 @@ import io.grpc.stub.StreamObserver;
 
 public class BidirectionalClient {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
-        System.out.println("Bidirectional Client running...");
-
-        // gRPC 채널 생성
-        ManagedChannel channel = ManagedChannelBuilder
-                .forAddress("localhost", 50054)
+        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 50055)
                 .usePlaintext()
                 .build();
 
-        // 비동기 Stub 생성
         BidirectionalServiceGrpc.BidirectionalServiceStub asyncStub = BidirectionalServiceGrpc.newStub(channel);
 
-        // 서버로부터의 응답을 처리할 StreamObserver 정의
-        StreamObserver<ChatMessage> responseObserver = new StreamObserver<ChatMessage>() {
-            @Override
-            public void onNext(ChatMessage message) {
-                System.out.println("[Client] Received from server: " + message.getMessage());
-            }
+        StreamObserver<MessageRequest> requestObserver = asyncStub
+                .getServerResponse(new StreamObserver<MessageResponse>() {
 
-            @Override
-            public void onError(Throwable t) {
-                System.out.println("[Client] Error: " + t.getMessage());
-            }
+                    @Override
+                    public void onNext(MessageResponse resp) {
+                        System.out.println("[server to client] " + resp.getMessage());
+                    }
 
-            @Override
-            public void onCompleted() {
-                System.out.println("[Client] Server stream completed.");
-            }
-        };
+                    @Override
+                    public void onError(Throwable t) {
+                        System.out.println("Client error: " + t.getMessage());
+                    }
 
-        // 요청 스트림 생성
-        StreamObserver<ChatMessage> requestObserver = asyncStub.chat(responseObserver);
+                    @Override
+                    public void onCompleted() {
+                        System.out.println("[Client] completed");
+                    }
+                });
 
-        // 실제 메시지 전송 코드
+        // Python 예제처럼 메시지 보내기
+        for (int i = 1; i <= 5; i++) {
+            String msg = "message #" + i;
+            System.out.println("[client to server] " + msg);
+
+            requestObserver.onNext(
+                    MessageRequest.newBuilder().setMessage(msg).build());
+
+            // 강의자료 실행 흐름 맞추기 위한 약간의 sleep
+            Thread.sleep(150);
+        }
+
+        requestObserver.onCompleted();
+        System.out.println("[client] stream closed");
+        Thread.sleep(500);
+
+        channel.shutdown();
     }
 }
