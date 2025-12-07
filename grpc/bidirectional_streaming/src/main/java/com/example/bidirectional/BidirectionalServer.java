@@ -3,24 +3,20 @@ package com.example.bidirectional;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
-import java.util.ArrayList;
 
 public class BidirectionalServer {
 
-    static class BidirectionalServiceImpl
-            extends BidirectionalServiceGrpc.BidirectionalServiceImplBase {
+    static class BidirectionalServiceImpl extends BidirectionalGrpc.BidirectionalImplBase {
 
         @Override
-        public StreamObserver<MessageRequest> getServerResponse(
-                StreamObserver<MessageResponse> responseObserver) {
+        public StreamObserver<Message> getServerResponse(StreamObserver<Message> responseObserver) {
 
-            ArrayList<String> buffer = new ArrayList<>();
-
-            return new StreamObserver<MessageRequest>() {
+            return new StreamObserver<Message>() {
 
                 @Override
-                public void onNext(MessageRequest req) {
-                    buffer.add(req.getMessage());
+                public void onNext(Message request) {
+                    // Python처럼 받은 즉시 에코 (yield message)
+                    responseObserver.onNext(request);
                 }
 
                 @Override
@@ -30,26 +26,23 @@ public class BidirectionalServer {
 
                 @Override
                 public void onCompleted() {
-                    for (String msg : buffer) {
-                        MessageResponse resp = MessageResponse.newBuilder()
-                                .setMessage(msg)
-                                .build();
-                        responseObserver.onNext(resp);
-                    }
+                    // Python 스타일: "Server processing gRPC bidirectional streaming."
+                    System.out.println("Server processing gRPC bidirectional streaming.");
                     responseObserver.onCompleted();
-                    System.out.println("[Server] completed");
                 }
             };
         }
     }
 
     public static void main(String[] args) throws Exception {
-        Server server = ServerBuilder.forPort(50055)
+        Server server = ServerBuilder
+                .forPort(50051)
                 .addService(new BidirectionalServiceImpl())
-                .build();
+                .build()
+                .start();
 
-        server.start();
-        System.out.println("Server processing gRPC bidirectional streaming.");
+        // Python 스타일: "Starting server. Listening on port 50051."
+        System.out.println("Starting server. Listening on port 50051.");
 
         server.awaitTermination();
     }

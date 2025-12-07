@@ -4,51 +4,63 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
 public class BidirectionalClient {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws Exception {
 
-        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 50055)
+        ManagedChannel channel = ManagedChannelBuilder
+                .forAddress("localhost", 50051)
                 .usePlaintext()
                 .build();
 
-        BidirectionalServiceGrpc.BidirectionalServiceStub asyncStub = BidirectionalServiceGrpc.newStub(channel);
+        BidirectionalGrpc.BidirectionalStub asyncStub = BidirectionalGrpc.newStub(channel);
 
-        StreamObserver<MessageRequest> requestObserver = asyncStub
-                .getServerResponse(new StreamObserver<MessageResponse>() {
+        CountDownLatch finishLatch = new CountDownLatch(1);
 
-                    @Override
-                    public void onNext(MessageResponse resp) {
-                        System.out.println("[server to client] " + resp.getMessage());
-                    }
+        StreamObserver<Message> requestObserver = asyncStub.getServerResponse(new StreamObserver<Message>() {
 
-                    @Override
-                    public void onError(Throwable t) {
-                        System.out.println("Client error: " + t.getMessage());
-                    }
+            @Override
+            public void onNext(Message response) {
+                // Python 스타일: "[server to client] message #1"
+                System.out.println("[server to client] " + response.getMessage());
+            }
 
-                    @Override
-                    public void onCompleted() {
-                        System.out.println("[Client] completed");
-                    }
-                });
+            @Override
+            public void onError(Throwable t) {
+                System.out.println("Client error: " + t.getMessage());
+                finishLatch.countDown();
+            }
 
-        // Python 예제처럼 메시지 보내기
-        for (int i = 1; i <= 5; i++) {
-            String msg = "message #" + i;
+            @Override
+            public void onCompleted() {
+                finishLatch.countDown();
+            }
+        });
+
+        // Python과 동일하게 5개의 메시지 전송
+        String[] messages = {
+                "message #1",
+                "message #2",
+                "message #3",
+                "message #4",
+                "message #5"
+        };
+
+        for (String msg : messages) {
+            // Python 스타일: "[client to server] message #1"
             System.out.println("[client to server] " + msg);
-
-            requestObserver.onNext(
-                    MessageRequest.newBuilder().setMessage(msg).build());
-
-            // 강의자료 실행 흐름 맞추기 위한 약간의 sleep
-            Thread.sleep(150);
+            requestObserver.onNext(Message.newBuilder().setMessage(msg).build());
         }
 
         requestObserver.onCompleted();
-        System.out.println("[client] stream closed");
-        Thread.sleep(500);
 
-        channel.shutdown();
+        // 서버 응답 대기
+        finishLatch.await(5, TimeUnit.SECONDS);
+
+        // 채널 종료
+        channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
     }
 }
