@@ -5,7 +5,7 @@ import io.grpc.ManagedChannelBuilder;
 
 import java.util.concurrent.TimeUnit;
 
-public class UnaryClient {
+public class client {
 
         public static void main(String[] args) {
                 // gRPC 채널 생성

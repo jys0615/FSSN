@@ -54,12 +54,12 @@ sourceSets {
 }
 
 tasks.register('runServer', JavaExec) {
-    mainClass = 'com.example.unary.UnaryServer'
+    mainClass = 'com.example.unary.server'  
     classpath = sourceSets.main.runtimeClasspath
 }
 
 tasks.register('runClient', JavaExec) {
-    mainClass = 'com.example.unary.UnaryClient'
+    mainClass = 'com.example.unary.client'  
     classpath = sourceSets.main.runtimeClasspath
 }
 

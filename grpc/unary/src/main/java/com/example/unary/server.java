@@ -6,7 +6,7 @@ import io.grpc.stub.StreamObserver;
 
 import java.io.IOException;
 
-public class UnaryServer {
+public class server {
 
     // 1) 서비스를 구현한 클래스
     static class UnaryServiceImpl extends UnaryServiceGrpc.UnaryServiceImplBase {

@@ -59,16 +59,16 @@ sourceSets {
 }
 
 application {
-    mainClass = 'com.example.serverstreaming.ServerStreamingServer'
+    mainClass = 'com.example.serverstreaming.server'  
 }
 
 tasks.register('runServer', JavaExec) {
-    mainClass = 'com.example.serverstreaming.ServerStreamingServer'
+    mainClass = 'com.example.serverstreaming.server'  
     classpath = sourceSets.main.runtimeClasspath
 }
 
 tasks.register('runClient', JavaExec) {
-    mainClass = 'com.example.serverstreaming.ServerStreamingClient'
+    mainClass = 'com.example.serverstreaming.client'  
     classpath = sourceSets.main.runtimeClasspath
 }
 

@@ -4,7 +4,7 @@ import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
 
-public class ServerStreamingServer {
+public class server {
 
     static class ServerStreamingServiceImpl extends ServerStreamingGrpc.ServerStreamingImplBase {
 

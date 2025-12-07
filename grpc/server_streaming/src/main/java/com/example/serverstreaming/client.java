@@ -5,7 +5,7 @@ import io.grpc.ManagedChannelBuilder;
 
 import java.util.concurrent.TimeUnit;
 
-public class ServerStreamingClient {
+public class client {
 
     public static void main(String[] args) {
 

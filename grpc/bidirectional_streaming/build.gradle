@@ -60,16 +60,16 @@ sourceSets {
 }
 
 application {
-    mainClass = 'com.example.bidirectional.BidirectionalServer'
+    mainClass = 'com.example.bidirectional.server'  
 }
 
 tasks.register('runServer', JavaExec) {
-    mainClass = 'com.example.bidirectional.BidirectionalServer'
+    mainClass = 'com.example.bidirectional.server'  
     classpath = sourceSets.main.runtimeClasspath
 }
 
 tasks.register('runClient', JavaExec) {
-    mainClass = 'com.example.bidirectional.BidirectionalClient'
+    mainClass = 'com.example.bidirectional.client'  
     classpath = sourceSets.main.runtimeClasspath
 }
 
