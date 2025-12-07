@@ -6,29 +6,29 @@ import io.grpc.stub.StreamObserver;
 
 public class ServerStreamingServer {
 
-    static class ServerStreamingServiceImpl extends ServerStreamingServiceGrpc.ServerStreamingServiceImplBase {
+    static class ServerStreamingServiceImpl extends ServerStreamingGrpc.ServerStreamingImplBase {
 
         @Override
-        public void streamNumbers(NumberRequest request, StreamObserver<NumberResponse> responseObserver) {
+        public void getServerResponse(Number request, StreamObserver<Message> responseObserver) {
 
-            int start = request.getStart();
+            // Python 스타일: "Server processing gRPC server-streaming {5}."
+            System.out.println("Server processing gRPC server-streaming.");
 
-            System.out.println("[Server] Received start: " + start);
+            // Python과 동일하게 5개의 메시지 전송
+            String[] messages = {
+                    "message #1",
+                    "message #2",
+                    "message #3",
+                    "message #4",
+                    "message #5"
+            };
 
-            // 예: 시작 숫자부터 +5까지 스트림으로 반환
-            for (int i = start; i < start + 5; i++) {
-                NumberResponse response = NumberResponse.newBuilder()
-                        .setValue(i)
+            for (String msg : messages) {
+                Message message = Message.newBuilder()
+                        .setMessage(msg)
                         .build();
 
-                System.out.println("[Server] Sending: " + i);
-                responseObserver.onNext(response);
-
-                try {
-                    Thread.sleep(500); // 스트리밍 느낌을 위해 (0.5초로 지정)
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                responseObserver.onNext(message);
             }
 
             responseObserver.onCompleted();
@@ -36,15 +36,14 @@ public class ServerStreamingServer {
     }
 
     public static void main(String[] args) throws Exception {
-        System.out.println("Server Streaming gRPC Server starting...");
-
         Server server = ServerBuilder
-                .forPort(50052) // 서버 스트리밍용 포트
-                .addService(new ServerStreamingServiceImpl()) // 서비스 등록
-                .build() // 서버 빌드
-                .start(); // 서버 시작
+                .forPort(50051)
+                .addService(new ServerStreamingServiceImpl())
+                .build()
+                .start();
 
-        System.out.println("Server started on port 50052");
+        // Python 스타일: "Starting server. Listening on port 50051."
+        System.out.println("Starting server. Listening on port 50051.");
 
         server.awaitTermination();
     }
